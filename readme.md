@@ -1,3 +1,4 @@
+
 线程池不允许使用Executors去创建，而是通过ThreadPoolExecutor的方式，这样的处理方式让写的同学更加明确线程池的运行规则，规避资源耗尽的风险。
 说明：Executors各个方法的弊端：
 1）newFixedThreadPool和newSingleThreadExecutor:
@@ -6,13 +7,15 @@
   主要问题是线程数最大数是Integer.MAX_VALUE，可能会创建数量非常多的线程，甚至OOM。
 
 Positive example 1：
+
+```
     //org.apache.commons.lang3.concurrent.BasicThreadFactory
     ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(1,
         new BasicThreadFactory.Builder().namingPattern("example-schedule-pool-%d").daemon(true).build());
-
-
+```
 
 Positive example 2：
+```$xslt
     ThreadFactory namedThreadFactory = new ThreadFactoryBuilder()
         .setNameFormat("demo-pool-%d").build();
 
@@ -23,8 +26,11 @@ Positive example 2：
 
     pool.execute(()-> System.out.println(Thread.currentThread().getName()));
     pool.shutdown();//gracefully shutdown
+```
+
 
 Positive example 3：
+```
     <bean id="userThreadPool"
         class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
         <property name="corePoolSize" value="10" />
@@ -38,5 +44,8 @@ Positive example 3：
     </bean>
     //in code
     userThreadPool.execute(thread);
+
+```
+
 
 
