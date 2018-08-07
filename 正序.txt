@@ -1,0 +1,151 @@
+1	
+2	1：不同年龄身体得分统计
+3	
+4			SELECT ELT( INTERVAL(b.age,
+5						0,
+6						20,
+7						25,
+8						30,
+9						35,
+10						40
+11					),
+12					'less20',
+13					'20-25',
+14					'25-30',
+15					'30-35',
+16					'35-40',
+17					'more40'
+18				) AS age,
+19				COUNT(b.score) AS num
+20			FROM
+21				(
+22					SELECT
+23						member_id,
+24						AVG(age) as age,
+25						AVG(score) / 10000 AS score
+26					FROM
+27						balance_measure_info_1
+28					WHERE
+29						electrode_number >= 4
+30					GROUP BY
+31						member_id
+32				) b
+33	
+34			GROUP BY
+35				ELT( INTERVAL(b.age,
+36						0,
+37						20,
+38						25,
+39						30,
+40						35,
+41						40
+42					),
+43					'less20',
+44					'20-25',
+45					'25-30',
+46					'30-35',
+47					'35-40',
+48					'more40'
+49				)
+50	
+51	
+52	SELECT
+53		elt(
+54			INTERVAL (
+55				d.longth,
+56				0,
+57				1,
+58				2,
+59				3,
+60				4,
+61				5,
+62				6,
+63				7,
+64				8,
+65				9
+66			),
+67			'1-1',
+68			'2-1',
+69			'3-1',
+70			'4-1',
+71			'5-1',
+72			'6-1',
+73			'7-1',
+74			'8-1',
+75			'9-1',
+76			'10-1'
+77		) AS longth,
+78		COUNT(d.member_id) AS num
+79	FROM
+80		(
+81			SELECT
+82				member_id,
+83				COUNT(id) / (
+84					DATEDIFF(
+85						MAX(create_time),
+86						MIN(create_time)
+87					)/7
+88				) AS longth
+89			FROM
+90				balance_measure_info_1
+91			GROUP BY
+92				member_id
+93		) d
+94	GROUP BY
+95			elt(
+96				INTERVAL (
+97					d.longth,
+98					0,
+99					1,
+100					2,
+101					3,
+102					4,
+103					5,
+104					6,
+105					7,
+106					8,
+107					9
+108				),
+109				'1-1',
+110				'2-1',
+111				'3-1',
+112				'4-1',
+113				'5-1',
+114				'6-1',
+115				'7-1',
+116				'8-1',
+117				'9-1',
+118				'10-1'
+119			)
+120	
+121	
+122	查询50张表中内脏脂肪等级分类统计。其中用到了动态sql语句，对于
+123	
+124	        SELECT
+125	            elt(
+126	                INTERVAL ((vfr/10000), 0, 4.5, 9.5,14.5),
+127	                '1-1',
+128	                '2-1',
+129	                '3-1',
+130	                '4-1'
+131	            ) AS vfr,
+132	            COUNT(member_id) AS num
+133	        FROM
+134	        <choose>
+135	            <when test="num!=0">
+136	                balance_measure_info_#{num,jdbcType=VARCHAR}
+137	            </when>
+138	            <otherwise>
+139	                balance_measure_info
+140	            </otherwise>
+141	        </choose>
+142	        WHERE
+143	            electrode_number >= 4 AND sex=1
+144	        GROUP BY
+145	            elt(
+146	                INTERVAL (vfr / 10000, 0, 4.5, 9.5,14.5),
+147	                '1-1',
+148	                '2-1',
+149	                '3-1',
+150	                '4-1'
+151	            )
