@@ -73,6 +73,14 @@
             <artifactId>commons-pool</artifactId>
             <version>1.6</version>
         </dependency>
+
+        <!--apt-mirror-->
+        <!-- https://mvnrepository.com/artifact/com.moparisthebest.aptIn16/apt-mirror-api -->
+        <dependency>
+            <groupId>com.moparisthebest.aptIn16</groupId>
+            <artifactId>apt-mirror-api</artifactId>
+            <version>0.2</version>
+        </dependency>
     </dependencies>
 
     <build>
